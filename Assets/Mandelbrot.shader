@@ -78,7 +78,7 @@
                     z = float2(z.x*z.x-z.y*z.y, 2*z.x*z.y) + c;
                     if (length(z) > r) {
                         break;
-                    }
+                    } 
                 }
                 
              //float dist  = length(z); //distance from origin
@@ -88,9 +88,10 @@
              //    return 0;
              //}
                 float m = sqrt(iter / _MaxIter);
-               //float col = tex2D(_MainTex, float2(m * _Repeat * _Time.y * _Speed, _Color));
+                float4 col = sin(float4(.3, .45, .65, 1) * m * 20)*.5 + .5; // procedural colors
+                col = tex2D(_MainTex, float2(m, _Color));
                //return col;
-                return m;
+                return col;
             }
             ENDCG
         }
