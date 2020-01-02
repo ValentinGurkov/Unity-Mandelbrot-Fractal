@@ -6,7 +6,7 @@
         // first two numbers are center of area, second two - size of area
         _Area("Area", vector) = (0, 0, 4 ,4)
         _Angle("Ange", range(-3.1415, 3.1415)) = 0
-        _MaxIter("Max Iterations", range(0, 255)) = 255
+        _MaxIter("Max Iterations", range(0, 555)) = 255
         _Color("Color", range(0,1)) = 0.5
         _Repeat("Repeat", float) =  1
         _Speed("Speed", range(0, 1)) = 0.1
@@ -66,13 +66,11 @@
             {
                 float2 c = _Area.xy + (i.uv - 0.5) * _Area.zw;
                 c = rot(c, _Area.xy, _Angle);
-                // track pixel jumping across screen
-                float2 z; 
-                // escape radius
-                float r = 20;
+                float2 z;  // track pixel jumping across screen
+                float r = 20;  // escape radius
                 float r2 = r*r;
-                // track current iteration
-                float iter;
+
+                float iter;  // track current iteration
                 for (iter = 0; iter < _MaxIter; iter++) {
                     // update z based on previous z value and add original starting position
                     z = float2(z.x*z.x-z.y*z.y, 2*z.x*z.y) + c;
@@ -80,17 +78,17 @@
                         break;
                     } 
                 }
-                
-             //float dist  = length(z); //distance from origin
-             //float fracIter  = log2(log(dist) / log(r));
-             //iter -= fracIter;
-                if (iter > _MaxIter) {
+
+                if (iter >= _MaxIter) {
                     return 0;
                 }
+                float dist  = length(z); // distance from origin
+                float fracIter  = (dist - r ) / (r2 - r); // linear interpolation
+                fracIter = log2( log(dist) / log(r) ); // double exponential interpolation
+                iter -= fracIter;
                 float m = sqrt(iter / _MaxIter);
                 float4 col = sin(float4(.3, .45, .65, 1) * m * 20)*.5 + .5; // procedural colors
-                col = tex2D(_MainTex, float2(m * _Repeat, _Color));
-               //return col;
+                col = tex2D(_MainTex, float2(m * _Repeat + _Time.y*_Speed, _Color));
                 return col;
             }
             ENDCG
