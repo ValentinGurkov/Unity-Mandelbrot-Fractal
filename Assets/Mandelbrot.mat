@@ -73,10 +73,11 @@ Material:
     - _Repeat: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _Speed: 0.1
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Area: {r: 0, g: 0, b: 5.7025766, a: 2.3161442}
+    - _Area: {r: 0, g: 0, b: 1.5503806, a: 0.62694496}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

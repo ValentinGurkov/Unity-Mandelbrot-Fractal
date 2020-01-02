@@ -80,17 +80,17 @@
                         break;
                     }
                 }
-                //distance from origin
-            // float dist  = length(z);
-            // float fracIter  = log2(log(dist) / log(r));
-            // iter -= fracIter;
-            // if (iter > _MaxIter) {
-            //     return 0;
-            // }
-                //float m = sqrt(iter / _MaxIter);
-                //float col = tex2D(_MainTex, float2(m * _Repeat * _Time.y * _Speed, _Color));
-                //return col;
-                return iter / _MaxIter;
+                
+             //float dist  = length(z); //distance from origin
+             //float fracIter  = log2(log(dist) / log(r));
+             //iter -= fracIter;
+             //if (iter > _MaxIter) {
+             //    return 0;
+             //}
+                float m = sqrt(iter / _MaxIter);
+               //float col = tex2D(_MainTex, float2(m * _Repeat * _Time.y * _Speed, _Color));
+               //return col;
+                return m;
             }
             ENDCG
         }
