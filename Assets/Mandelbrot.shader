@@ -10,6 +10,7 @@
         _Color("Color", range(0,1)) = 0.5
         _Repeat("Repeat", float) =  1
         _Speed("Speed", range(0, 1)) = 0.1
+        _Symmetry("Symmetry", range(0, 1)) = 0
     }
     SubShader
     {
@@ -49,6 +50,7 @@
             float _Color;
             float _Repeat;
             float _Speed;
+            float _Symmetry;
             int _MaxIter;
             sampler2D _MainTex;
 
@@ -64,17 +66,24 @@
 
             fixed4 frag (v2f i) : SV_Target
             {
-                float2 c = _Area.xy + (i.uv - 0.5) * _Area.zw;
+                float2 uv = i.uv - 0.5;
+                uv = abs(uv);
+                uv = lerp(i.uv - 0.5, uv, _Symmetry);
+                float2 c = _Area.xy + uv * _Area.zw;
                 c = rot(c, _Area.xy, _Angle);
                 float2 z;  // track pixel jumping across screen
+                float2 zPrev;
                 float r = 20;  // escape radius
                 float r2 = r*r;
 
                 float iter;  // track current iteration
                 for (iter = 0; iter < _MaxIter; iter++) {
                     // update z based on previous z value and add original starting position
+                   //zPrev = z;
+                   zPrev = rot(z, 0, _Time.y);
                     z = float2(z.x*z.x-z.y*z.y, 2*z.x*z.y) + c;
-                    if (length(z) > r) {
+                    if (dot(z, zPrev) > r2) {
+                    //if (length(z) > r) {
                         break;
                     } 
                 }
@@ -85,10 +94,15 @@
                 float dist  = length(z); // distance from origin
                 float fracIter  = (dist - r ) / (r2 - r); // linear interpolation
                 fracIter = log2( log(dist) / log(r) ); // double exponential interpolation
-                iter -= fracIter;
+               // iter -= fracIter;
                 float m = sqrt(iter / _MaxIter);
                 float4 col = sin(float4(.3, .45, .65, 1) * m * 20)*.5 + .5; // procedural colors
                 col = tex2D(_MainTex, float2(m * _Repeat + _Time.y*_Speed, _Color));
+                col *= smoothstep(3, 0, fracIter);
+
+                float angle = atan2(z.x, z.y);
+
+                col *= 1 + sin(angle*2 + _Time.y*4)*.2;
                 return col;
             }
             ENDCG
