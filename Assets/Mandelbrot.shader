@@ -84,9 +84,9 @@
              //float dist  = length(z); //distance from origin
              //float fracIter  = log2(log(dist) / log(r));
              //iter -= fracIter;
-             //if (iter > _MaxIter) {
-             //    return 0;
-             //}
+                if (iter > _MaxIter) {
+                    return 0;
+                }
                 float m = sqrt(iter / _MaxIter);
                 float4 col = sin(float4(.3, .45, .65, 1) * m * 20)*.5 + .5; // procedural colors
                 col = tex2D(_MainTex, float2(m * _Repeat, _Color));
